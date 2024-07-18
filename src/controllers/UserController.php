@@ -7,24 +7,6 @@ use Models\UserModel;
 
 class UserController extends Controller
 {
-    /*public function register()
-    {
-        $input = $this->getInput();
-
-        // Validate input
-        $errors = $this->validateUserInput($input);
-        if (!empty($errors)) {
-            return $this->jsonResponse(['errors' => $errors], 400);
-        }
-
-        $userModel = new UserModel();
-
-        $hashedPassword = password_hash($input['password'], PASSWORD_DEFAULT);
-        $input['password'] = $hashedPassword;
-
-        $result = $userModel->createUser($input);
-        return $this->jsonResponse($result);
-    }*/
     public function register()
     {
         $input = $this->getInput();
@@ -41,7 +23,7 @@ class UserController extends Controller
         $input['password'] = $hashedPassword;
 
         $result = $userModel->createUser($input);
-        
+
         if (isset($result['error'])) {
             return $this->jsonResponse(['message' => $result['error']], 400);
         }

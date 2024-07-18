@@ -7,13 +7,6 @@ use PDOException;
 
 class UserModel extends Model
 {
-    /*
-    public function createUser($data)
-    {
-        $stmt = $this->db->prepare('INSERT INTO users (name, email, password) VALUES (:name, :email, :password)');
-        return $stmt->execute($data);
-    }
-    */
     public function createUser($data)
     {
         try {
@@ -72,4 +65,3 @@ class UserModel extends Model
         return $stmt->execute(['id' => $id]);
     }
 }
-?>
