@@ -3,13 +3,28 @@
 namespace Models;
 
 use Core\Model;
+use PDOException;
 
 class UserModel extends Model
 {
+    /*
     public function createUser($data)
     {
         $stmt = $this->db->prepare('INSERT INTO users (name, email, password) VALUES (:name, :email, :password)');
         return $stmt->execute($data);
+    }
+    */
+    public function createUser($data)
+    {
+        try {
+            $stmt = $this->db->prepare('INSERT INTO users (name, email, password) VALUES (:name, :email, :password)');
+            return $stmt->execute($data);
+        } catch (PDOException $e) {
+            if ($e->getCode() == 23000) { // Integrity constraint violation
+                return ['error' => 'User already exists'];
+            }
+            throw $e; // Re-throw exception if it's not a duplicate entry error
+        }
     }
 
     public function getUserByEmail($email)
