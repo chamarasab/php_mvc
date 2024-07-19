@@ -3,6 +3,7 @@
 namespace Models;
 
 use Core\Model;
+use PDO;
 use PDOException;
 
 class UserModel extends Model
@@ -63,5 +64,30 @@ class UserModel extends Model
     {
         $stmt = $this->db->prepare('DELETE FROM users WHERE id = :id');
         return $stmt->execute(['id' => $id]);
+    }
+
+    public function createPasswordResetToken($email, $token)
+    {
+        $stmt = $this->db->prepare('INSERT INTO password_resets (email, token) VALUES (:email, :token)');
+        return $stmt->execute(['email' => $email, 'token' => $token]);
+    }
+
+    public function getPasswordResetToken($token)
+    {
+        $stmt = $this->db->prepare('SELECT * FROM password_resets WHERE token = :token');
+        $stmt->execute(['token' => $token]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function updatePasswordByEmail($email, $password)
+    {
+        $stmt = $this->db->prepare('UPDATE users SET password = :password WHERE email = :email');
+        return $stmt->execute(['email' => $email, 'password' => $password]);
+    }
+
+    public function deletePasswordResetToken($token)
+    {
+        $stmt = $this->db->prepare('DELETE FROM password_resets WHERE token = :token');
+        return $stmt->execute(['token' => $token]);
     }
 }

@@ -4,6 +4,10 @@ namespace Controllers;
 
 use Core\Controller;
 use Models\UserModel;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use Helpers\MailHelper;
+use Helpers\ResponseHelper;
 
 class UserController extends Controller
 {
@@ -89,25 +93,7 @@ class UserController extends Controller
 
         return $this->jsonResponse($filteredUsers);
     }
-    /*
-    public function updateUser($id)
-    {
-        $input = $this->getInput();
 
-        // Hash the password if it is present in the input
-        if (isset($input['password'])) {
-            $input['password'] = password_hash($input['password'], PASSWORD_DEFAULT);
-        }
-
-        $userModel = new UserModel();
-        $result = $userModel->updateUser($id, $input);
-
-        if ($result) {
-            return $this->jsonResponse(['message' => 'User updated successfully']);
-        } else {
-            return $this->jsonResponse(['message' => 'Failed to update user'], 400);
-        }
-    }*/
     public function updateUser($id)
     {
         $input = $this->getInput();
@@ -170,5 +156,67 @@ class UserController extends Controller
         // Add more validations as needed
 
         return $errors;
+    }
+
+    public function requestPasswordReset()
+    {
+        $input = $this->getInput();
+        $email = $input['email'];
+        $token = bin2hex(random_bytes(16));
+
+        $userModel = new UserModel();
+        $user = $userModel->getUserByEmail($email);
+
+        if (!$user) {
+            return $this->jsonResponse(['message' => 'User not found'], 404);
+        }
+
+        $userModel->createPasswordResetToken($email, $token);
+
+        $emailSent = MailHelper::sendResetEmail($email, $token);
+
+        if ($emailSent) {
+            return $this->jsonResponse(['message' => 'Password reset email sent']);
+        } else {
+            return $this->jsonResponse(['message' => 'Failed to send email'], 500);
+        }
+    }
+
+    public function resetPassword()
+    {
+        $input = $this->getInput();
+        $token = $input['token'];
+        $newPassword = $input['password'];
+
+        $userModel = new UserModel();
+        $resetRequest = $userModel->getPasswordResetToken($token);
+
+        if (!$resetRequest) {
+            return $this->jsonResponse(['message' => 'Invalid or expired token'], 400);
+        }
+
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        $userModel->updatePasswordByEmail($resetRequest['email'], $hashedPassword);
+        $userModel->deletePasswordResetToken($token);
+
+        return $this->jsonResponse(['message' => 'Password reset successful']);
+    }
+
+    public function showResetPasswordForm()
+    {
+        // Get the token from the query string
+        $token = $_GET['token'] ?? '';
+
+        // Verify the token
+        $userModel = new UserModel();
+        $resetRequest = $userModel->getPasswordResetToken($token);
+
+        if (!$resetRequest) {
+            echo "Invalid or expired token.";
+            return;
+        }
+
+        // Render the password reset form
+        \Core\View::make('reset_password', ['token' => $token]);
     }
 }
