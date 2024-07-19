@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 18, 2024 at 04:41 AM
+-- Generation Time: Jul 19, 2024 at 09:36 AM
 -- Server version: 11.4.2-MariaDB
 -- PHP Version: 8.3.9
 
@@ -24,6 +24,64 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `password_resets`
+--
+
+CREATE TABLE `password_resets` (
+  `id` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `expires_at` timestamp NULL DEFAULT (current_timestamp() + interval 1 minute)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `password_resets`
+--
+
+INSERT INTO `password_resets` (`id`, `email`, `token`, `created_at`, `expires_at`) VALUES
+(1, 'kalana@example.com', '74bb2887d7f56024e80a10df34d1d436', '2024-07-18 10:07:25', '2024-07-19 07:21:35'),
+(2, 'chamara.orbit@gmail.com', '9e88388c43c3209d35d941fe6c831e55', '2024-07-18 10:10:17', '2024-07-19 07:21:35'),
+(3, 'chamara.orbit@gmail.com', 'acbe652ad09584a88827fe14d51e9a26', '2024-07-18 10:26:14', '2024-07-19 07:21:35'),
+(4, 'chamara.orbit@gmail.com', '0928fca85de6527890981c68c425990c', '2024-07-18 10:26:16', '2024-07-19 07:21:35'),
+(5, 'chamara.orbit@gmail.com', 'dfc2d9295d38873c8a1f87a8ad623ba3', '2024-07-18 10:26:32', '2024-07-19 07:21:35'),
+(6, 'chamara.orbit@gmail.com', '338e5768ddc4ef6b17d85a8d5dc01f2a', '2024-07-18 10:27:18', '2024-07-19 07:21:35'),
+(7, 'chamara.orbit@gmail.com', 'c4193c1481333388c6cd192e484d9b20', '2024-07-18 10:27:39', '2024-07-19 07:21:35'),
+(8, 'chamara.orbit@gmail.com', '87cfa30272cfca37dd3673338a44be80', '2024-07-18 10:29:05', '2024-07-19 07:21:35'),
+(9, 'chamara.orbit@gmail.com', '6bf87f2470ddb6d2c6581c454afbaca2', '2024-07-18 10:29:06', '2024-07-19 07:21:35'),
+(10, 'chamara.orbit@gmail.com', 'e6ba502eee65030c159ea0da0e7665db', '2024-07-18 10:32:21', '2024-07-19 07:21:35'),
+(11, 'chamara.orbit@gmail.com', 'a31ff485b073053d6b8fbe577226c9da', '2024-07-18 10:32:28', '2024-07-19 07:21:35'),
+(12, 'chamara.orbit@gmail.com', 'b9b2e7b083e918bb643a123d24c661c0', '2024-07-18 11:02:27', '2024-07-19 07:21:35'),
+(13, 'chamara.orbit@gmail.com', '34875a99f062556cc3c6225fd3a877e1', '2024-07-18 11:12:46', '2024-07-19 07:21:35'),
+(14, 'chamara.orbit@gmail.com', 'a08dab1f006a525a2bbbba4bab219491', '2024-07-18 11:25:19', '2024-07-19 07:21:35'),
+(15, 'chamara.orbit@gmail.com', 'b2a28729a1fe4d575ca5ed51cb27f55e', '2024-07-18 11:31:05', '2024-07-19 07:21:35'),
+(16, 'chamara.orbit@gmail.com', 'b3c6efa1173688959386f0160281fae5', '2024-07-18 11:31:53', '2024-07-19 07:21:35'),
+(17, 'chamara.orbit@gmail.com', 'e4a1287b081fb009afb6d9b8df4d6988', '2024-07-18 11:31:59', '2024-07-19 07:21:35'),
+(18, 'chamara.orbit@gmail.com', '845406750b4b14466dd3e8b035511790', '2024-07-18 11:47:24', '2024-07-19 07:21:35'),
+(19, 'chamara.orbit@gmail.com', '0e7d8ab917645522d03ea65ffe7e75f7', '2024-07-18 11:47:35', '2024-07-19 07:21:35'),
+(20, 'chamara.orbit@gmail.com', '5572041ac933e0bbe2c733235fbd2698', '2024-07-18 11:49:25', '2024-07-19 07:21:35'),
+(21, 'chamara.orbit@gmail.com', 'fabe789c60de083a0b867fb43c824697', '2024-07-18 11:49:26', '2024-07-19 07:21:35'),
+(22, 'chamara.orbit@gmail.com', 'f231e0e21d0aa76c3a4f3ac45e3f49e6', '2024-07-19 05:21:01', '2024-07-19 07:21:35'),
+(23, 'chamara.orbit@gmail.com', '3452c5d6bbe9721fea4837682204a07f', '2024-07-19 05:21:03', '2024-07-19 07:21:35'),
+(24, 'chamara.orbit@gmail.com', '113d597301c924afb95d4545b3220246', '2024-07-19 05:21:04', '2024-07-19 07:21:35'),
+(25, 'chamara.orbit@gmail.com', '6d3af5e7832e0574b7ae8084da747866', '2024-07-19 05:21:05', '2024-07-19 07:21:35'),
+(26, 'chamara.orbit@gmail.com', '3658787489ae6f510ecb9d7f44493dd7', '2024-07-19 05:21:24', '2024-07-19 07:21:35'),
+(27, 'chamara.orbit@gmail.com', '7976232e7f7b0fc1138d181ff9e1b7bb', '2024-07-19 05:24:16', '2024-07-19 07:21:35'),
+(28, 'chamara.orbit@gmail.com', 'f9d544cfd219d490a0e4df6b95177561', '2024-07-19 05:24:17', '2024-07-19 07:21:35'),
+(29, 'chamara.orbit@gmail.com', 'f53eb0d5982067437c8e700ea1f10ad3', '2024-07-19 05:24:18', '2024-07-19 07:21:35'),
+(30, 'chamara.orbit@gmail.com', 'd58cdb2933dadaa8aeb260429a9f630b', '2024-07-19 05:24:20', '2024-07-19 07:21:35'),
+(31, 'chamara.orbit@gmail.com', 'dc6d2a59a121cf057cd2f24e587e15c4', '2024-07-19 05:24:54', '2024-07-19 07:21:35'),
+(32, 'chamara.orbit@gmail.com', 'e93fa1e4e0ea4dba88453a70d7f1a82a', '2024-07-19 05:24:54', '2024-07-19 07:21:35'),
+(33, 'chamara.orbit@gmail.com', 'e70467aaa289b7d983cf9c268b9f6e7f', '2024-07-19 05:54:40', '2024-07-19 07:21:35'),
+(34, 'chamara.orbit@gmail.com', 'e07751bebef4c6be21928fea112022ae', '2024-07-19 05:54:42', '2024-07-19 07:21:35'),
+(35, 'chamara.orbit@gmail.com', '505255aba864268f63bd0df971fd09fd', '2024-07-19 05:56:00', '2024-07-19 07:21:35'),
+(36, 'chamara.orbit@gmail.com', '6f5aa35a9b988782c0bfcaa03991caf3', '2024-07-19 06:36:46', '2024-07-19 07:21:35'),
+(37, 'chamara.orbit@gmail.com', '7679e8e5319a9ed0b8309e3bc13475f0', '2024-07-19 06:38:25', '2024-07-19 07:21:35'),
+(38, 'chamara.orbit@gmail.com', '54b4e79479cef04a9c41911d2cf6fa05', '2024-07-19 06:40:15', '2024-07-19 07:21:35');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -40,12 +98,23 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `logged_at`) VALUES
-(1, 'John Doe', 'john.doe@example.com', '$2y$10$Wl.BHI1Isw8SwUJvYRvTqeQIpc0Ein5gsH/CukJCmX9XG5d3QScl2', '2024-07-18 04:21:05'),
-(3, 'Malith Ekanayake', 'malith@example.com', '$2y$10$xyPJJC/X9NPn/f4wPU6gluHlInDwI29N4YUG8hpSrW6vSRCgdRhm2', '2024-07-18 03:26:34');
+(1, 'John Doe', 'john.doe@example.com', '$2y$10$Wl.BHI1Isw8SwUJvYRvTqeQIpc0Ein5gsH/CukJCmX9XG5d3QScl2', '2024-07-18 05:42:09'),
+(3, 'Malith Ekanayake', 'malith@example.com', '$2y$10$xyPJJC/X9NPn/f4wPU6gluHlInDwI29N4YUG8hpSrW6vSRCgdRhm2', '2024-07-18 05:44:40'),
+(4, 'Saroja Ekanayake', 'saroja@example.com', '$2y$10$pHGUxq4VM/nUKTOUgkqDL.LtkMMmlzIiVe75lccn79xEMGk.EouWC', '2024-07-18 07:00:20'),
+(7, 'Supun Chathuranga', 'supun@example.com', '$2y$10$xI6LvdSJIGBW9HMVLz79P.zxTrzq9P.eIEl8mV40Ql1iSdpgK4gkW', '2024-07-18 08:25:49'),
+(9, 'Malan Jayasinghe', 'malan@example.com', '$2y$10$j1/CVom/qELkcuLLXt3CouzJZ8Q6J55gzyS6Px5CH3YzYZPH.tDkm', '2024-07-18 08:49:32'),
+(10, 'Kalana Jayaweera', 'kalana@example.com', '$2y$10$ZxwYJ4k1kukF7ORES/0sr.M1Rm7SxJP0zuiZPiWWpFKtlMGja4Hr2', '2024-07-18 09:42:51'),
+(15, 'Chamara Orbit', 'chamara.orbit@gmail.com', '$2y$10$rJkux7jGLbxpMUt.c5iBBOS2jPUkoclqh/1s8LluVCj2MlK.BclPO', '2024-07-19 09:16:05');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `password_resets`
+--
+ALTER TABLE `password_resets`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `users`
@@ -59,10 +128,16 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `password_resets`
+--
+ALTER TABLE `password_resets`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
