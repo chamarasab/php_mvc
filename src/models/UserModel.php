@@ -68,26 +68,32 @@ class UserModel extends Model
 
     public function createPasswordResetToken($email, $token)
     {
-        $stmt = $this->db->prepare('INSERT INTO password_resets (email, token) VALUES (:email, :token)');
-        return $stmt->execute(['email' => $email, 'token' => $token]);
+        $stmt = $this->db->prepare('INSERT INTO password_resets (email, token, expires_at) VALUES (:email, :token, DATE_ADD(NOW(), INTERVAL 1 MINUTE))');
+        return $stmt->execute([
+            'email' => $email,
+            'token' => $token
+        ]);
     }
 
     public function getPasswordResetToken($token)
     {
-        $stmt = $this->db->prepare('SELECT * FROM password_resets WHERE token = :token');
+        $stmt = $this->db->prepare('SELECT * FROM password_resets WHERE token = :token AND expires_at > NOW()');
         $stmt->execute(['token' => $token]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    public function updatePasswordByEmail($email, $password)
-    {
-        $stmt = $this->db->prepare('UPDATE users SET password = :password WHERE email = :email');
-        return $stmt->execute(['email' => $email, 'password' => $password]);
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
     public function deletePasswordResetToken($token)
     {
         $stmt = $this->db->prepare('DELETE FROM password_resets WHERE token = :token');
         return $stmt->execute(['token' => $token]);
+    }
+
+    public function updatePasswordByEmail($email, $newPassword)
+    {
+        $stmt = $this->db->prepare('UPDATE users SET password = :password WHERE email = :email');
+        return $stmt->execute([
+            'password' => $newPassword,
+            'email' => $email
+        ]);
     }
 }

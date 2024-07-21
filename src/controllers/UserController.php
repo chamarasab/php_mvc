@@ -21,18 +21,21 @@ class UserController extends Controller
             return $this->jsonResponse(['errors' => $errors], 400);
         }
 
-        $userModel = new UserModel();
+        try {
+            $userModel = new UserModel();
+            $hashedPassword = password_hash($input['password'], PASSWORD_DEFAULT);
+            $input['password'] = $hashedPassword;
 
-        $hashedPassword = password_hash($input['password'], PASSWORD_DEFAULT);
-        $input['password'] = $hashedPassword;
+            $result = $userModel->createUser($input);
 
-        $result = $userModel->createUser($input);
+            if (isset($result['error'])) {
+                return $this->jsonResponse(['message' => $result['error']], 400);
+            }
 
-        if (isset($result['error'])) {
-            return $this->jsonResponse(['message' => $result['error']], 400);
+            return $this->jsonResponse($result);
+        } catch (\Exception $e) {
+            return $this->jsonResponse(['message' => 'An error occurred while creating the user.'], 500);
         }
-
-        return $this->jsonResponse($result);
     }
 
     public function login()
@@ -130,78 +133,7 @@ class UserController extends Controller
             return $this->jsonResponse(['message' => 'Failed to delete user'], 400);
         }
     }
-
-    protected function getInput()
-    {
-        return json_decode(file_get_contents('php://input'), true);
-    }
-
-    protected function jsonResponse($data, $statusCode = 200)
-    {
-        \Helpers\ResponseHelper::jsonResponse($data, $statusCode);
-    }
-
-    private function validateUserInput($input, $id = null)
-    {
-        $errors = [];
-
-        if (isset($input['email']) && !filter_var($input['email'], FILTER_VALIDATE_EMAIL)) {
-            $errors[] = 'Invalid email format';
-        }
-
-        if (isset($input['password']) && strlen($input['password']) < 8) {
-            $errors[] = 'Password must be at least 8 characters long';
-        }
-
-        // Add more validations as needed
-
-        return $errors;
-    }
-
-    public function requestPasswordReset()
-    {
-        $input = $this->getInput();
-        $email = $input['email'];
-        $token = bin2hex(random_bytes(16));
-
-        $userModel = new UserModel();
-        $user = $userModel->getUserByEmail($email);
-
-        if (!$user) {
-            return $this->jsonResponse(['message' => 'User not found'], 404);
-        }
-
-        $userModel->createPasswordResetToken($email, $token);
-
-        $emailSent = MailHelper::sendResetEmail($email, $token);
-
-        if ($emailSent) {
-            return $this->jsonResponse(['message' => 'Password reset email sent']);
-        } else {
-            return $this->jsonResponse(['message' => 'Failed to send email'], 500);
-        }
-    }
-
-    public function resetPassword()
-    {
-        $input = $this->getInput();
-        $token = $input['token'];
-        $newPassword = $input['password'];
-
-        $userModel = new UserModel();
-        $resetRequest = $userModel->getPasswordResetToken($token);
-
-        if (!$resetRequest) {
-            return $this->jsonResponse(['message' => 'Invalid or expired token'], 400);
-        }
-
-        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-        $userModel->updatePasswordByEmail($resetRequest['email'], $hashedPassword);
-        $userModel->deletePasswordResetToken($token);
-
-        return $this->jsonResponse(['message' => 'Password reset successful']);
-    }
-
+    
     public function showResetPasswordForm()
     {
         // Get the token from the query string
@@ -219,4 +151,93 @@ class UserController extends Controller
         // Render the password reset form
         \Core\View::make('reset_password', ['token' => $token]);
     }
+
+    public function requestPasswordReset()
+    {
+        $input = $this->getInput();
+        $email = $input['email'];
+        $token = bin2hex(random_bytes(16));
+
+        $userModel = new UserModel();
+        $user = $userModel->getUserByEmail($email);
+
+        if (!$user) {
+            return $this->jsonResponse(['message' => 'User not found'], 404);
+        }
+
+        $userModel->createPasswordResetToken($email, $token);
+
+        // Send email with the token
+        $emailSent = MailHelper::sendResetEmail($email, $token);
+
+        if ($emailSent) {
+            return $this->jsonResponse(['message' => 'Password reset email sent']);
+        } else {
+            return $this->jsonResponse(['message' => 'Failed to send email'], 500);
+        }
+    }
+
+    /**
+     * Resets the user's password
+     */
+    public function resetPassword()
+    {
+        $input = $this->getInput();
+        $token = $input['token'];
+        $newPassword = $input['password'];
+
+        if (empty($token) || empty($newPassword)) {
+            return $this->jsonResponse(['message' => 'Token and password are required'], 400);
+        }
+
+        $userModel = new UserModel();
+        $resetRequest = $userModel->getPasswordResetToken($token);
+
+        if (!$resetRequest) {
+            return $this->jsonResponse(['message' => 'Invalid or expired token'], 400);
+        }
+
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        $userModel->updatePasswordByEmail($resetRequest['email'], $hashedPassword);
+        $userModel->deletePasswordResetToken($token);
+
+        return $this->jsonResponse(['message' => 'Password reset successful']);
+    }
+
+    /**
+     * Retrieves input from the request
+     */
+    protected function getInput()
+    {
+        return json_decode(file_get_contents('php://input'), true);
+    }
+
+    /**
+     * Sends a JSON response
+     */
+    protected function jsonResponse($data, $statusCode = 200)
+    {
+        \Helpers\ResponseHelper::jsonResponse($data, $statusCode);
+    }
+
+    /**
+     * Validates user input
+     */
+    private function validateUserInput($input, $id = null)
+    {
+        $errors = [];
+
+        if (isset($input['email']) && !filter_var($input['email'], FILTER_VALIDATE_EMAIL)) {
+            $errors[] = 'Invalid email format';
+        }
+
+        if (isset($input['password']) && strlen($input['password']) < 8) {
+            $errors[] = 'Password must be at least 8 characters long';
+        }
+
+        // Add more validations as needed
+
+        return $errors;
+    }
 }
+?>
