@@ -1,5 +1,4 @@
 <?php
-
 namespace Controllers;
 
 use Core\Controller;
@@ -130,10 +129,10 @@ class UserController extends Controller
         if ($result) {
             return $this->jsonResponse(['message' => 'User deleted successfully']);
         } else {
-            return $this->jsonResponse(['message' => 'Failed to delete user'], 400);
+            return $this->jsonResponse(['message' => 'User not found'], 404);
         }
     }
-    
+
     public function showResetPasswordForm()
     {
         // Get the token from the query string
@@ -177,9 +176,6 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Resets the user's password
-     */
     public function resetPassword()
     {
         $input = $this->getInput();
@@ -204,25 +200,17 @@ class UserController extends Controller
         return $this->jsonResponse(['message' => 'Password reset successful']);
     }
 
-    /**
-     * Retrieves input from the request
-     */
     protected function getInput()
     {
-        return json_decode(file_get_contents('php://input'), true);
+        $input = json_decode(file_get_contents('php://input'), true);
+        return filter_var_array($input, FILTER_SANITIZE_SPECIAL_CHARS);
     }
 
-    /**
-     * Sends a JSON response
-     */
     protected function jsonResponse($data, $statusCode = 200)
     {
         \Helpers\ResponseHelper::jsonResponse($data, $statusCode);
     }
 
-    /**
-     * Validates user input
-     */
     private function validateUserInput($input, $id = null)
     {
         $errors = [];
@@ -235,9 +223,6 @@ class UserController extends Controller
             $errors[] = 'Password must be at least 8 characters long';
         }
 
-        // Add more validations as needed
-
         return $errors;
     }
 }
-?>

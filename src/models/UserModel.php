@@ -60,11 +60,13 @@ class UserModel extends Model
         return $stmt->execute($data);
     }
 
+    /*
     public function deleteUser($id)
     {
         $stmt = $this->db->prepare('DELETE FROM users WHERE id = :id');
         return $stmt->execute(['id' => $id]);
     }
+    */
 
     public function createPasswordResetToken($email, $token)
     {
@@ -95,5 +97,21 @@ class UserModel extends Model
             'password' => $newPassword,
             'email' => $email
         ]);
+    }
+
+    public function deleteUser($id)
+    {
+        // Check if the user exists
+        $stmt = $this->db->prepare('SELECT id FROM users WHERE id = :id');
+        $stmt->execute(['id' => $id]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$user) {
+            return false; // User not found
+        }
+
+        // Proceed to delete the user
+        $stmt = $this->db->prepare('DELETE FROM users WHERE id = :id');
+        return $stmt->execute(['id' => $id]);
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace Core;
 
 class Controller
@@ -19,7 +18,7 @@ class Controller
 
     protected function getInput()
     {
-        return json_decode(file_get_contents('php://input'), true);
+        $input = json_decode(file_get_contents('php://input'), true);
+        return filter_var_array($input, FILTER_SANITIZE_SPECIAL_CHARS);
     }
 }
-?>
