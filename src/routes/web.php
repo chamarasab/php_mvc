@@ -11,4 +11,11 @@ $router->addRoute('DELETE', '/user/{id}', 'UserController', 'deleteUser');
 $router->addRoute('POST', '/request-password-reset', 'UserController', 'requestPasswordReset');
 $router->addRoute('POST', '/reset-password', 'UserController', 'resetPassword');
 $router->addRoute('GET', '/reset-password', 'UserController', 'showResetPasswordForm');
-?>
+
+$router->addRoute('POST', '/inquiry', 'InquiryController', 'create');
+$router->addRoute('GET', '/inquiry/{id}', 'InquiryController', 'read');
+$router->addRoute('GET', '/inquiries', 'InquiryController', 'readAll');
+$router->addRoute('PUT', '/inquiry/{id}', 'InquiryController', 'update');
+$router->addRoute('DELETE', '/inquiry/{id}', 'InquiryController', 'delete');
+$router->addRoute('POST', '/inquiry/search', 'InquiryController', 'search');
+
