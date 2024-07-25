@@ -144,6 +144,34 @@ class InquiryController extends Controller
         return $this->jsonResponse($results);
     }
 
+    public function approve($id)
+    {
+        $inquiryModel = new InquiryModel();
+        $inquiry = $inquiryModel->getInquiryById($id);
+
+        if (!$inquiry) {
+            return $this->jsonResponse(['message' => 'Inquiry not found'], 404);
+        }
+
+        if ($inquiry['approval'] == 1) {
+            return $this->jsonResponse(['message' => 'Inquiry already approved']);
+        }
+
+        $result = $inquiryModel->approveInquiry($id);
+        if ($result) {
+            return $this->jsonResponse(['message' => 'Inquiry approved successfully']);
+        } else {
+            return $this->jsonResponse(['message' => 'Failed to approve inquiry'], 400);
+        }
+    }
+
+    public function getApprovedInquiries()
+    {
+        $inquiryModel = new InquiryModel();
+        $inquiries = $inquiryModel->getApprovedInquiries();
+        return $this->jsonResponse($inquiries);
+    }
+
     protected function getInput()
     {
         $input = json_decode(file_get_contents('php://input'), true);
@@ -153,5 +181,12 @@ class InquiryController extends Controller
     protected function jsonResponse($data, $statusCode = 200)
     {
         \Helpers\ResponseHelper::jsonResponse($data, $statusCode);
+    }
+
+    public function getUnapprovedInquiries()
+    {
+        $inquiryModel = new InquiryModel();
+        $inquiries = $inquiryModel->getUnapprovedInquiries();
+        return $this->jsonResponse($inquiries);
     }
 }

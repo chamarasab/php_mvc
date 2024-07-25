@@ -1,4 +1,5 @@
 <?php
+
 namespace Models;
 
 use Core\Model;
@@ -27,7 +28,8 @@ class InquiryModel extends Model
         }
 
         try {
-            $stmt = $this->db->prepare('INSERT INTO inquiry (id_type, id_number, requested_report, report_date, subject_type, scoring_tag, created_at, batch_type) VALUES (:id_type, :id_number, :requested_report, :report_date, :subject_type, :scoring_tag, :created_at, :batch_type)');
+            $stmt = $this->db->prepare('INSERT INTO inquiry (id_type, id_number, requested_report, report_date, subject_type, scoring_tag, created_at, batch_type, approval) VALUES (:id_type, :id_number, :requested_report, :report_date, :subject_type, :scoring_tag, :created_at, :batch_type, :approval)');
+            $data['approval'] = 0; // Set default approval status to 0
             $stmt->execute($data);
             return $this->db->lastInsertId();
         } catch (PDOException $e) {
@@ -48,6 +50,12 @@ class InquiryModel extends Model
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getApprovedInquiries()
+    {
+        $stmt = $this->db->query('SELECT * FROM inquiry WHERE approval = 1');
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function updateInquiry($id, $data)
     {
         $fields = [];
@@ -59,6 +67,12 @@ class InquiryModel extends Model
         $stmt = $this->db->prepare("UPDATE inquiry SET $fields WHERE no = :id");
         $data['id'] = $id;
         return $stmt->execute($data);
+    }
+
+    public function approveInquiry($id)
+    {
+        $stmt = $this->db->prepare('UPDATE inquiry SET approval = 1 WHERE no = :id');
+        return $stmt->execute(['id' => $id]);
     }
 
     public function deleteInquiry($id)
@@ -91,6 +105,12 @@ class InquiryModel extends Model
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getUnapprovedInquiries()
+    {
+        $stmt = $this->db->query('SELECT * FROM inquiry WHERE approval = 0');
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
