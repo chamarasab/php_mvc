@@ -1,4 +1,5 @@
 <?php
+
 namespace Controllers;
 
 use Core\Controller;
@@ -9,6 +10,12 @@ class InquiryController extends Controller
     public function create()
     {
         $input = $this->getInput();
+
+        // Validate input
+        $errors = $this->validateInput($input);
+        if (!empty($errors)) {
+            return $this->jsonResponse(['errors' => $errors], 400);
+        }
 
         try {
             $inquiryModel = new InquiryModel();
@@ -23,6 +30,38 @@ class InquiryController extends Controller
             error_log($e->getMessage()); // Log the exception message
             return $this->jsonResponse(['message' => 'An error occurred while creating the inquiry.', 'error' => $e->getMessage()], 500);
         }
+    }
+
+    private function validateInput($input)
+    {
+        $errors = [];
+
+        if (empty($input['id_type'])) {
+            $errors[] = 'ID type is required.';
+        }
+        if (empty($input['id_number'])) {
+            $errors[] = 'ID number is required.';
+        }
+        if (empty($input['requested_report'])) {
+            $errors[] = 'Requested report is required.';
+        }
+        if (empty($input['report_date']) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $input['report_date'])) {
+            $errors[] = 'Valid report date is required.';
+        }
+        if (empty($input['subject_type'])) {
+            $errors[] = 'Subject type is required.';
+        }
+        if (empty($input['scoring_tag'])) {
+            $errors[] = 'Scoring tag is required.';
+        }
+        if (empty($input['created_at']) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $input['created_at'])) {
+            $errors[] = 'Valid creation date is required.';
+        }
+        if (empty($input['batch_type'])) {
+            $errors[] = 'Batch type is required.';
+        }
+
+        return $errors;
     }
 
     public function read($id)
@@ -48,17 +87,36 @@ class InquiryController extends Controller
     {
         $input = $this->getInput();
 
-        try {
-            $inquiryModel = new InquiryModel();
-            $result = $inquiryModel->updateInquiry($id, $input);
+        // Check if the inquiry exists
+        $inquiryModel = new InquiryModel();
+        $existingInquiry = $inquiryModel->getInquiryById($id);
+        if (!$existingInquiry) {
+            return $this->jsonResponse(['message' => 'Inquiry not found'], 404);
+        }
 
+        // Check if the input values are the same as the existing values
+        $isSame = true;
+        foreach ($input as $key => $value) {
+            if (isset($existingInquiry[$key]) && $existingInquiry[$key] != $value) {
+                $isSame = false;
+                break;
+            }
+        }
+
+        if ($isSame) {
+            return $this->jsonResponse(['message' => 'No need to update, same values provided']);
+        }
+
+        // If there are changes, proceed with the update
+        try {
+            $result = $inquiryModel->updateInquiry($id, $input);
             if ($result) {
                 return $this->jsonResponse(['message' => 'Inquiry updated successfully']);
             } else {
                 return $this->jsonResponse(['message' => 'Failed to update inquiry'], 400);
             }
         } catch (\Exception $e) {
-            return $this->jsonResponse(['message' => 'An error occurred while updating the inquiry.'], 500);
+            return $this->jsonResponse(['message' => 'An error occurred while updating the inquiry.', 'error' => $e->getMessage()], 500);
         }
     }
 
@@ -73,7 +131,6 @@ class InquiryController extends Controller
             return $this->jsonResponse(['message' => 'Inquiry not found'], 404);
         }
     }
-
 
     public function search()
     {
