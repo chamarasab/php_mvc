@@ -19,7 +19,6 @@ $router->addRoute('PUT', '/inquiry/{id}', 'InquiryController', 'update');
 $router->addRoute('DELETE', '/inquiry/{id}', 'InquiryController', 'delete');
 $router->addRoute('POST', '/inquiry/search', 'InquiryController', 'search');
 
-// New routes for approving inquiries and fetching approved inquiries
 $router->addRoute('POST', '/inquiry/{id}/approve', 'InquiryController', 'approve');
 $router->addRoute('GET', '/inquiries/approved', 'InquiryController', 'getApprovedInquiries');
 $router->addRoute('GET', '/inquiries/unapproved', 'InquiryController', 'getUnapprovedInquiries');
