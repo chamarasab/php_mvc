@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 19, 2024 at 09:36 AM
+-- Generation Time: Jul 25, 2024 at 08:06 AM
 -- Server version: 11.4.2-MariaDB
 -- PHP Version: 8.3.9
 
@@ -20,6 +20,35 @@ SET time_zone = "+00:00";
 --
 -- Database: `mvc`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `inquiry`
+--
+
+CREATE TABLE `inquiry` (
+  `no` int(11) NOT NULL,
+  `id_type` varchar(50) DEFAULT NULL,
+  `id_number` varchar(13) DEFAULT NULL,
+  `requested_report` varchar(50) DEFAULT NULL,
+  `report_date` date NOT NULL DEFAULT current_timestamp(),
+  `subject_type` varchar(50) DEFAULT NULL,
+  `scoring_tag` varchar(50) DEFAULT NULL,
+  `created_at` date NOT NULL DEFAULT current_timestamp(),
+  `batch_type` varchar(10) NOT NULL DEFAULT '01'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `inquiry`
+--
+
+INSERT INTO `inquiry` (`no`, `id_type`, `id_number`, `requested_report`, `report_date`, `subject_type`, `scoring_tag`, `created_at`, `batch_type`) VALUES
+(1, 'NIC', '123456789V', 'Credit Report', '2024-07-24', 'Individual', 'tag3', '2024-07-24', '01'),
+(3, 'NIC', '987654321V', 'Credit Report', '2024-07-24', 'Individual', 'tag3', '2024-07-24', '01'),
+(4, 'NIC', '951592315V', 'Credit Report', '2024-07-23', 'Individual', 'tag2', '2024-07-24', '01'),
+(5, 'NIC', '951592335V', 'Credit Report', '2024-07-25', 'Individual', 'tag2', '2024-07-24', '02'),
+(8, 'NIC', '951592135V', 'Credit Report', '2024-07-26', 'Individual', 'tag2', '2024-07-24', '01');
 
 -- --------------------------------------------------------
 
@@ -77,7 +106,11 @@ INSERT INTO `password_resets` (`id`, `email`, `token`, `created_at`, `expires_at
 (35, 'chamara.orbit@gmail.com', '505255aba864268f63bd0df971fd09fd', '2024-07-19 05:56:00', '2024-07-19 07:21:35'),
 (36, 'chamara.orbit@gmail.com', '6f5aa35a9b988782c0bfcaa03991caf3', '2024-07-19 06:36:46', '2024-07-19 07:21:35'),
 (37, 'chamara.orbit@gmail.com', '7679e8e5319a9ed0b8309e3bc13475f0', '2024-07-19 06:38:25', '2024-07-19 07:21:35'),
-(38, 'chamara.orbit@gmail.com', '54b4e79479cef04a9c41911d2cf6fa05', '2024-07-19 06:40:15', '2024-07-19 07:21:35');
+(38, 'chamara.orbit@gmail.com', '54b4e79479cef04a9c41911d2cf6fa05', '2024-07-19 06:40:15', '2024-07-19 07:21:35'),
+(47, 'chamara.orbit@gmail.com', '5ffdd74c8d8f4efb460c4ae29fcf2bb2', '2024-07-21 08:51:44', '2024-07-21 08:52:44'),
+(48, 'roxgustav@gmail.com', '706827127aea280c032293ab4170cf19', '2024-07-21 09:09:46', '2024-07-21 09:10:46'),
+(50, 'chathurangarulz@gmail.com', '56e933a20d2c5e668f59db0fbef4b5b7', '2024-07-24 06:40:27', '2024-07-24 06:41:27'),
+(51, 'chathurangarulz@gmail.com', 'cc2da5231e480b6c7f581e97140f832b', '2024-07-24 06:47:51', '2024-07-24 06:48:51');
 
 -- --------------------------------------------------------
 
@@ -104,11 +137,20 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`, `logged_at`) VALUES
 (7, 'Supun Chathuranga', 'supun@example.com', '$2y$10$xI6LvdSJIGBW9HMVLz79P.zxTrzq9P.eIEl8mV40Ql1iSdpgK4gkW', '2024-07-18 08:25:49'),
 (9, 'Malan Jayasinghe', 'malan@example.com', '$2y$10$j1/CVom/qELkcuLLXt3CouzJZ8Q6J55gzyS6Px5CH3YzYZPH.tDkm', '2024-07-18 08:49:32'),
 (10, 'Kalana Jayaweera', 'kalana@example.com', '$2y$10$ZxwYJ4k1kukF7ORES/0sr.M1Rm7SxJP0zuiZPiWWpFKtlMGja4Hr2', '2024-07-18 09:42:51'),
-(15, 'Chamara Orbit', 'chamara.orbit@gmail.com', '$2y$10$rJkux7jGLbxpMUt.c5iBBOS2jPUkoclqh/1s8LluVCj2MlK.BclPO', '2024-07-19 09:16:05');
+(15, 'Chamara Orbit', 'chamara.orbit@gmail.com', '$2y$10$YobN.d6p5Sl/L5fiste9HO16jMomoVguh0/HFUQ0vRU/6gNFLhRIy', '2024-07-24 06:53:43'),
+(17, 'Chamara Ekanayake', 'chamaraekanayake.dev@gmail.com', '$2y$10$HAX1T9gXriOvUGcSNcH5PObufjXjAY4.86jKBKvNl9L3INUC8YWju', '2024-07-19 11:51:59'),
+(24, 'Supun Chathuranga', 'chathurangarulz@gmail.com', '$2y$10$ZFIfruWMVHdBSDAKvZxpEOVGGJx4xmS90UMHkOhlR5v1ihrnXkYeK', '2024-07-24 06:40:01'),
+(25, 'Ishara Priyadarshanai', 'ishara@gmail.com', '$2y$10$45o59wAZEGWTiLcqWdNq0elzcz7M5wqQ9saiMGzk7ICbYPXRl4Da.', '2024-07-24 06:54:21');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `inquiry`
+--
+ALTER TABLE `inquiry`
+  ADD PRIMARY KEY (`no`);
 
 --
 -- Indexes for table `password_resets`
@@ -128,16 +170,22 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `inquiry`
+--
+ALTER TABLE `inquiry`
+  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
 -- AUTO_INCREMENT for table `password_resets`
 --
 ALTER TABLE `password_resets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
