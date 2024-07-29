@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 25, 2024 at 08:06 AM
+-- Generation Time: Jul 29, 2024 at 08:17 AM
 -- Server version: 11.4.2-MariaDB
 -- PHP Version: 8.3.9
 
@@ -36,19 +36,20 @@ CREATE TABLE `inquiry` (
   `subject_type` varchar(50) DEFAULT NULL,
   `scoring_tag` varchar(50) DEFAULT NULL,
   `created_at` date NOT NULL DEFAULT current_timestamp(),
-  `batch_type` varchar(10) NOT NULL DEFAULT '01'
+  `batch_type` varchar(10) NOT NULL DEFAULT '01',
+  `approval` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `inquiry`
 --
 
-INSERT INTO `inquiry` (`no`, `id_type`, `id_number`, `requested_report`, `report_date`, `subject_type`, `scoring_tag`, `created_at`, `batch_type`) VALUES
-(1, 'NIC', '123456789V', 'Credit Report', '2024-07-24', 'Individual', 'tag3', '2024-07-24', '01'),
-(3, 'NIC', '987654321V', 'Credit Report', '2024-07-24', 'Individual', 'tag3', '2024-07-24', '01'),
-(4, 'NIC', '951592315V', 'Credit Report', '2024-07-23', 'Individual', 'tag2', '2024-07-24', '01'),
-(5, 'NIC', '951592335V', 'Credit Report', '2024-07-25', 'Individual', 'tag2', '2024-07-24', '02'),
-(8, 'NIC', '951592135V', 'Credit Report', '2024-07-26', 'Individual', 'tag2', '2024-07-24', '01');
+INSERT INTO `inquiry` (`no`, `id_type`, `id_number`, `requested_report`, `report_date`, `subject_type`, `scoring_tag`, `created_at`, `batch_type`, `approval`) VALUES
+(1, 'NIC', '123456789V', 'Credit Report', '2024-07-24', 'Individual', 'tag3', '2024-07-24', '01', 0),
+(3, 'NIC', '987654321V', 'Credit Report', '2024-07-24', 'Individual', 'tag3', '2024-07-24', '01', 0),
+(4, 'NIC', '951592315V', 'Credit Report', '2024-07-23', 'Individual', 'tag2', '2024-07-24', '01', 0),
+(5, 'NIC', '951592335V', 'Credit Report', '2024-07-25', 'Individual', 'tag2', '2024-07-24', '02', 0),
+(8, 'NIC', '951592135V', 'Credit Report', '2024-07-26', 'Individual', 'tag2', '2024-07-24', '01', 1);
 
 -- --------------------------------------------------------
 
