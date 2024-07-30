@@ -1,6 +1,6 @@
 # PHP MVC Login and Registration
 
-This is a PHP MVC (Model-View-Controller) application that includes user registration and login functionalities. The application is structured to follow the MVC pattern, promoting separation of concerns and making the codebase more manageable.
+This is a PHP MVC (Model-View-Controller) application that includes user registration, login functionalities, and an inquiry module. The application is structured to follow the MVC pattern, promoting separation of concerns and making the codebase more manageable.
 
 ## Table of Contents
 
@@ -10,12 +10,13 @@ This is a PHP MVC (Model-View-Controller) application that includes user registr
 4. [Database Setup](#database-setup)
 5. [Running the Application](#running-the-application)
 6. [Routes](#routes)
-7. [Contributing](#contributing)
-8. [License](#license)
+7. [Inquiry Module](#inquiry-module)
+8. [Contributing](#contributing)
+9. [License](#license)
 
 ## Introduction
 
-This project demonstrates a simple implementation of an MVC framework in PHP. It includes basic features such as user registration, login, and user management.
+This project demonstrates a simple implementation of an MVC framework in PHP. It includes basic features such as user registration, login, user management, and an inquiry module for handling user inquiries.
 
 ## Project Structure
 
@@ -29,7 +30,8 @@ This project demonstrates a simple implementation of an MVC framework in PHP. It
 │   ├── /config
 │   │   └── config.php
 │   ├── /controllers
-│   │   └── UserController.php
+│   │   ├── UserController.php
+│   │   └── InquiryController.php
 │   ├── /core
 │   │   ├── Router.php
 │   │   ├── Controller.php
@@ -40,7 +42,8 @@ This project demonstrates a simple implementation of an MVC framework in PHP. It
 │   ├── /middlewares
 │   │   └── AuthMiddleware.php
 │   ├── /models
-│   │   └── UserModel.php
+│   │   ├── UserModel.php
+│   │   └── InquiryModel.php
 │   └── /routes
 │       └── web.php
 │
@@ -52,57 +55,68 @@ This project demonstrates a simple implementation of an MVC framework in PHP. It
 
 ## Setting Up the Environment
 
-1. **Install Composer**:
-   Composer is a dependency manager for PHP. You can download and install it from [getcomposer.org](https://getcomposer.org).
+1. **Install Composer**: Composer is a dependency manager for PHP. You can download and install it from [getcomposer.org](https://getcomposer.org/).
 
 2. **Create the Project Directory**:
+
    ```bash
    mkdir php_mvc_login_and_register
    cd php_mvc_login_and_register
    ```
 
 3. **Initialize Composer**:
+
    ```bash
    composer init
    ```
 
-4. **Install Dependencies**:
-   Create a `composer.json` file with the necessary dependencies. Then, run:
+4. **Install Dependencies**: Create a `composer.json` file with the necessary dependencies. Then, run:
+
    ```bash
    composer install
    ```
 
 ## Database Setup
 
-1. **Create the Database**:
-   Run the following SQL commands to create the `mvc` database and `users` table.
+1.  **Create the Database**: Run the following SQL commands to create the `mvc` database and `users` and `inquiries` tables.
 
    ```sql
-   CREATE DATABASE mvc;
-   
-   USE mvc;
-   
-   CREATE TABLE `users` (
-     `id` int(11) NOT NULL AUTO_INCREMENT,
-     `name` varchar(255) NOT NULL,
-     `email` varchar(255) NOT NULL,
-     `password` varchar(255) NOT NULL,
-     `logged_at` timestamp NULL DEFAULT current_timestamp(),
-     PRIMARY KEY (`id`)
-   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+        CREATE DATABASE mvc;
+
+        USE mvc;
+
+        CREATE TABLE `users` (
+          `id` int(11) NOT NULL AUTO_INCREMENT,
+          `name` varchar(255) NOT NULL,
+          `email` varchar(255) NOT NULL,
+          `password` varchar(255) NOT NULL,
+          `logged_at` timestamp NULL DEFAULT current_timestamp(),
+          PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+        CREATE TABLE `inquiry` (
+            `no` int(11) NOT NULL,
+            `id_type` varchar(50) DEFAULT NULL,
+            `id_number` varchar(13) DEFAULT NULL,
+            `requested_report` varchar(50) DEFAULT NULL,
+            `report_date` date NOT NULL DEFAULT current_timestamp(),
+            `subject_type` varchar(50) DEFAULT NULL,
+            `scoring_tag` varchar(50) DEFAULT NULL,
+            `created_at` date NOT NULL DEFAULT current_timestamp(),
+            `batch_type` varchar(10) NOT NULL DEFAULT '01',
+            `approval` tinyint(1) NOT NULL DEFAULT 0
+         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
    ```
 
 ## Running the Application
 
-1. **Run the Application**:
-   Use a PHP built-in server to run the application.
-   
+1. **Run the Application**: Use a PHP built-in server to run the application.
+
    ```bash
    php -S localhost:8000 -t public
    ```
 
-2. **Access the Application**:
-   Open a browser and navigate to `http://localhost:8000`.
+2. **Access the Application**: Open a browser and navigate to `http://localhost:8000`.
 
 ## Routes
 
@@ -114,6 +128,31 @@ The application routes are defined in `src/routes/web.php`. Here are the availab
 - `GET /users` - List all users.
 - `PUT /user/{id}` - Update user details.
 - `DELETE /user/{id}` - Delete a user.
+- `POST /inquiry` - Submit a new inquiry.
+- `GET /inquiries` - List all inquiries.
+
+## Inquiry Module
+
+The inquiry module allows users to submit inquiries which are stored in the database. Each inquiry is associated with a user.
+
+### Inquiry Routes
+
+- `POST /inquiry` - Submit a new inquiry.
+- `GET /inquiries` - List all inquiries.
+
+### Inquiry Database Table
+
+```sql
+CREATE TABLE `inquiries` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `subject` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+```
 
 ## Contributing
 
