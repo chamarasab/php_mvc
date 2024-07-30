@@ -60,14 +60,6 @@ class UserModel extends Model
         return $stmt->execute($data);
     }
 
-    /*
-    public function deleteUser($id)
-    {
-        $stmt = $this->db->prepare('DELETE FROM users WHERE id = :id');
-        return $stmt->execute(['id' => $id]);
-    }
-    */
-
     public function createPasswordResetToken($email, $token)
     {
         $stmt = $this->db->prepare('INSERT INTO password_resets (email, token, expires_at) VALUES (:email, :token, DATE_ADD(NOW(), INTERVAL 1 MINUTE))');
