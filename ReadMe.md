@@ -128,8 +128,6 @@ The application routes are defined in `src/routes/web.php`. Here are the availab
 - `GET /users` - List all users.
 - `PUT /user/{id}` - Update user details.
 - `DELETE /user/{id}` - Delete a user.
-- `POST /inquiry` - Submit a new inquiry.
-- `GET /inquiries` - List all inquiries.
 
 ## Inquiry Module
 
@@ -137,22 +135,16 @@ The inquiry module allows users to submit inquiries which are stored in the data
 
 ### Inquiry Routes
 
-- `POST /inquiry` - Submit a new inquiry.
-- `GET /inquiries` - List all inquiries.
-
-### Inquiry Database Table
-
-```sql
-CREATE TABLE `inquiries` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `subject` varchar(255) NOT NULL,
-  `message` text NOT NULL,
-  `created_at` timestamp NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-```
+* `POST /inquiry` - Submit a new inquiry.
+* `GET /inquiries` - List all inquiries.
+* `GET /inquiry/{id}` - Get a specific inquiry by ID.
+* `PUT /inquiry/{id}` - Update a specific inquiry by ID.
+* `DELETE /inquiry/{id}` - Delete a specific inquiry by ID.
+* `GET /inquiries` - List all inquiries.
+* `POST /inquiry/search` - Search inquiries by subject.
+* `POST /inquiry/{id}/approve` - Update approve status of specific inquiry by ID.
+* `GET /inquiries/unapproved` - List all inquiries which are NOT approved.
+* `POST /inquiry/approved` - List all inquiries which are approved.
 
 ## Contributing
 
