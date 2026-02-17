@@ -32,10 +32,10 @@ CREATE TABLE `inquiry` (
   `id_type` varchar(50) DEFAULT NULL,
   `id_number` varchar(13) DEFAULT NULL,
   `requested_report` varchar(50) DEFAULT NULL,
-  `report_date` date NOT NULL DEFAULT current_timestamp(),
+  `report_date` date NOT NULL,
   `subject_type` varchar(50) DEFAULT NULL,
   `scoring_tag` varchar(50) DEFAULT NULL,
-  `created_at` date NOT NULL DEFAULT current_timestamp(),
+  `created_at` date NOT NULL,
   `batch_type` varchar(10) NOT NULL DEFAULT '01',
   `approval` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

@@ -41,6 +41,8 @@ class InquiryController extends Controller
         }
         if (empty($input['id_number'])) {
             $errors[] = 'ID number is required.';
+        } elseif (strlen($input['id_number']) > 13) {
+            $errors[] = 'ID number must be 13 characters or fewer.';
         }
         if (empty($input['requested_report'])) {
             $errors[] = 'Requested report is required.';
